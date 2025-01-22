@@ -1,2 +1,2 @@
 # Notify Me
-This application was made as a simple way to generate reminders. By entering a title, message, and delay, you can notify yourself to check something. Although you can have a theoretically infinitely long delay, the form only takes inputs in minutes and seconds.
+This application was made as a simple way to generate reminders. By entering a title, message, and delay, you can notify yourself to check something. Although you can have a theoretically infinitely long delay, the form only takes inputs in minutes and seconds. The app can also run in the background, minimizing itself to the system tray when the window is closed until it gives its notification.
