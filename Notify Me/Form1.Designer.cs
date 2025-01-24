@@ -1,4 +1,4 @@
-﻿namespace Notify_Me
+namespace Notify_Me
 {
     partial class Form1
     {
@@ -40,6 +40,7 @@
             icoSystemTray = new NotifyIcon(components);
             contextMenuTray = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)txtDelaySeconds).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtDelayMinutes).BeginInit();
             contextMenuTray.SuspendLayout();
@@ -142,11 +143,22 @@
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Trebuchet MS", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(12, 9);
+            label1.Name = "label1";
+            label1.Size = new Size(241, 61);
+            label1.TabIndex = 10;
+            label1.Text = "Notify Me";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label1);
             Controls.Add(txtDelayMinutes);
             Controls.Add(lblMinutes);
             Controls.Add(txtNotifTitle);
@@ -179,5 +191,6 @@
         private NotifyIcon icoSystemTray;
         private ContextMenuStrip contextMenuTray;
         private ToolStripMenuItem exitToolStripMenuItem;
+        private Label label1;
     }
 }
