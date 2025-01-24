@@ -10,52 +10,63 @@ namespace Notify_Me
         public Form1()
         {
             InitializeComponent();
-            InitializeSystemTrayIcon();
         }
 
         private void BtnNotifyMe(object sender, EventArgs e)
         {
-
-            sendNotif(); // prepare notification
-            MessageBox.Show("Your notification will be sent on time!", "Success", MessageBoxButtons.OK);
+            // ensure that notification fields are not blank
+            if (txtNotification.Text == "" || txtNotifTitle.Text == "")
+            {
+                MessageBox.Show("An error has occured: notification fields cannot be blank", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                SendNotif(); // prepare notification
+                MessageBox.Show("Your notification will be sent on time!", "Success", MessageBoxButtons.OK);
+            }
         }
 
-        async void sendNotif()
+        async void SendNotif()
         {
             isWaiting = true; // prevent app from ending
             activeReminders++; // increase number of reminders waiting
-            await Task.Delay(TimeSpan.FromMilliseconds((int.Parse(txtDelayMinutes.Text) * 60) + int.Parse(txtDelaySeconds.Text)) * 1000); // convert to seconds, then milliseconds
+            await Task.Delay(TimeSpan.FromSeconds
+                (Decimal.ToInt32(
+                    (txtDelayMinutes.Value * 60) + txtDelaySeconds.Value)
+                )
+            ); // convert to seconds, then milliseconds
             activeReminders--; // decrease reminders waiting
             if (activeReminders == 0)
             {
                 isWaiting = false; // if not handling another reminder, stop waiting
             }
-            NotifyIcon notifyicon = new NotifyIcon(); // create a new notif
-            notifyicon.Icon = SystemIcons.Information; // default notification icon
-            notifyicon.Visible = true;
-            notifyicon.BalloonTipTitle = txtNotifTitle.Text;
-            notifyicon.BalloonTipText = txtNotification.Text;
+
+            // create notification
+            NotifyIcon notifyicon = new()
+            {
+                Icon = SystemIcons.Information, // default notification icon
+                Visible = true,
+                BalloonTipTitle = txtNotifTitle.Text,
+                BalloonTipText = txtNotification.Text
+            }; // create a new notif
             notifyicon.ShowBalloonTip(3000); // 3 second duration
             
             // if no timers are running, close app.
-            if (isWaiting == false)
+            if (!isWaiting)
             {
-                Application.ExitThread();
+                notifyicon.Dispose(); // prevent memory leaks
+                Application.ExitThread(); // stop outgoing notif
+                Application.Exit(); // end program because it's evil and will destroy humanity otherwise
             }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (isWaiting == true)
+            if (isWaiting)
             {
                 e.Cancel = true; // stop form from closing
                 this.Hide(); // hide form
             }
-        }
-
-        private void InitializeSystemTrayIcon()
-        {
-            ContextMenuStrip = new ContextMenuStrip();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -74,7 +85,9 @@ namespace Notify_Me
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             icoSystemTray.Visible = false;
-            Application.ExitThread();
+            icoSystemTray.Dispose(); // prevent memory leaks
+            Application.ExitThread(); // stop outgoing notif
+            Application.Exit(); // end program because it's evil and will destroy humanity otherwise
         }
     }
 }
