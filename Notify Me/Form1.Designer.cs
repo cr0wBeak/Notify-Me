@@ -1,4 +1,4 @@
-﻿namespace Notify_Me
+namespace Notify_Me
 {
     partial class Form1
     {
